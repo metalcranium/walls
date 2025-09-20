@@ -1,5 +1,7 @@
 #include <filesystem>
 #include <iostream>
+#include <fstream>
+#include <pthread.h>
 #include <vector>
 #include "raylib.h"
 
@@ -74,6 +76,16 @@ void unload_textures(std::vector<Texture> pictures){
   }
 }
 
+void save_wallpaper(std::string path){
+  std::ofstream file;
+  std::string first = "preload = " + path;
+  std::string second = "wallpaper = ," + path;
+  file.open("/home/blake/.config/hypr/hyprpaper.conf");
+  file << first;
+  file << "\n";
+  file << second;
+  file.close();
+}
 
 int main() {
   std::string path = "/home/blake/Pictures/wallpapers/";
@@ -113,18 +125,18 @@ int main() {
       if (CheckCollisionPointRec(mouse, buttons[i].source)
             && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
         std::string unload = "hyprctl hyprpaper unload all";
+        std::string preload = "hyprctl hyprpaper preload " + buttons[i].path;
+        std::string wallpaper = "hyprctl hyprpaper wallpaper ," + buttons[i].path;
         std::string command = unload;
         system(command.c_str());
-        std::cout << "button: " << i << std::endl;
-        std::cout << "path: " << buttons[i].path << std::endl;
-        std::string preload = "hyprctl hyprpaper preload ";
-        std::string wallpaper = "hyprctl hyprpaper wallpaper ,";
-        command = preload + buttons[i].path;
+        command = preload;
         system(command.c_str());
-        command = wallpaper + buttons[i].path;
+        command = wallpaper;
         system(command.c_str());
         current_texture = buttons[i].path;
+        save_wallpaper(buttons[i].path);
       }
+
     }
 
     // draw
