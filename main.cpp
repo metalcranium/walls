@@ -81,6 +81,11 @@ int main() {
   Vector2 dest = {0,0};
   while (!WindowShouldClose()){
     // update
+    for (int i = 0; i < buttons.size(); i++){
+      if (CheckCollisionPointRec(GetMousePosition(), buttons[i].source)){
+        std::cout << "button: " << i << std::endl;
+      }
+    }
 
     // draw
     BeginDrawing();
