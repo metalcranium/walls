@@ -31,7 +31,6 @@ class Button {
     }
 };
 
-
 std::vector<std::string>get_files(std::string path){
   std::vector<std::string>files;
   for (auto i : std::filesystem::directory_iterator(path)){
@@ -39,6 +38,7 @@ std::vector<std::string>get_files(std::string path){
   }
   return files;
 }
+
 template <typename T>
 void print_files(std::vector<T> files){
   for (auto i : files){
@@ -55,6 +55,7 @@ void load_textures(std::vector<Texture>&wallpapers,std::vector<std::string>files
     std::cout << count << " images loaded." << std::endl;
   }
 }
+
 void load_buttons(std::vector<Button>&buttons,std::vector<std::string>files){
   int count = 0;
   for (auto i : files){
@@ -64,6 +65,7 @@ void load_buttons(std::vector<Button>&buttons,std::vector<std::string>files){
     std::cout << count << " buttons loaded." << std::endl;
   }
 }
+
 void set_paths_to_buttons(std::vector<Button>&buttons,std::vector<std::string>files){
   for (int i = 0; i < buttons.size(); i++){
     buttons[i].set_path(files[i]);
@@ -87,8 +89,18 @@ void save_wallpaper(std::string path){
   file.close();
 }
 
+std::string get_config(){
+  std::string path;
+  std::ifstream file;
+  file.open("/home/blake/.config/walls/config");
+  getline(file, path);
+  file.close();
+  return path;
+   
+}
+
 int main() {
-  std::string path = "/home/blake/Pictures/wallpapers/";
+  std::string path = get_config();// "/home/blake/Pictures/wallpapers/";
   std::vector<std::string>files = get_files(path);
   std::vector<Button>buttons;
   std::vector<Texture>wallpapers;
@@ -109,7 +121,6 @@ int main() {
           buttons[index].position.y = i * 96;
           buttons[index].source = {buttons[index].position.x, buttons[index].position.y,
               buttons[index].width, buttons[index].height};
-          // buttons[index].print_position();
           index++;
          }
       }
@@ -136,15 +147,12 @@ int main() {
         current_texture = buttons[i].path;
         save_wallpaper(buttons[i].path);
       }
-
     }
-
     // draw
     BeginDrawing();
     ClearBackground(BLACK);
       for (int i = 0; i < wallpapers.size(); i++){
         for (int j = 0; j < 5; j++){
-          // buttons[index].position = {float(j*96), float(i*96)};
           Rectangle source = {0,0,float(wallpapers[index].width),float(wallpapers[index].height)};
           buttons[index].destination = {float(j*96), float(i*96), 96, 96};
           DrawTexturePro(wallpapers[index], source, buttons[index].destination
@@ -158,6 +166,4 @@ int main() {
   }
   unload_textures(wallpapers);
   CloseWindow();
-
-  
 }
