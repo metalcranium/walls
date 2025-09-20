@@ -104,20 +104,26 @@ int main() {
   set_paths_to_buttons(buttons, files);
 
   index = 0;
+  std::string current_texture;
+  
   while (!WindowShouldClose()){
     // update
     Vector2 mouse = GetMousePosition();
     for (int i = 0; i < buttons.size(); i++){
       if (CheckCollisionPointRec(mouse, buttons[i].source)
             && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
+        std::string unload = "hyprctl hyprpaper unload all";
+        std::string command = unload;
+        system(command.c_str());
         std::cout << "button: " << i << std::endl;
         std::cout << "path: " << buttons[i].path << std::endl;
         std::string preload = "hyprctl hyprpaper preload ";
         std::string wallpaper = "hyprctl hyprpaper wallpaper ,";
-        std::string command = preload + buttons[i].path;
+        command = preload + buttons[i].path;
         system(command.c_str());
         command = wallpaper + buttons[i].path;
         system(command.c_str());
+        current_texture = buttons[i].path;
       }
     }
 
