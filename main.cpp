@@ -104,10 +104,10 @@ int main() {
   std::vector<std::string>files = get_files(path);
   std::vector<Button>buttons;
   std::vector<Texture>wallpapers;
-
+ 
   print_files(files);
 
-  InitWindow(1200,800,"Walls");
+  InitWindow(500,800,"Walls");
 
   load_textures(wallpapers, files);
   load_buttons(buttons, files);
