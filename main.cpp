@@ -113,8 +113,10 @@ int main() {
 
   load_textures(wallpapers, files);
   load_buttons(buttons, files);
-  
   std::cout << "buttons: " << buttons.size() << std::endl;
+
+  RenderTexture viewport = LoadRenderTexture(width, height);
+  Rectangle screen_rec = {0,0,float(viewport.texture.width),-float(viewport.texture.width)};
   
   int index = 0;
   std::cout << "buttons loop" << std::endl;
