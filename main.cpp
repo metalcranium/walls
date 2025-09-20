@@ -100,6 +100,8 @@ std::string get_config(){
 }
 
 int main() {
+  int width = 5 * 96;
+  int height = 800;
   std::string path = get_config();// "/home/blake/Pictures/wallpapers/";
   std::vector<std::string>files = get_files(path);
   std::vector<Button>buttons;
@@ -107,10 +109,11 @@ int main() {
  
   print_files(files);
 
-  InitWindow(500,800,"Walls");
+  InitWindow(width,height,"Walls");
 
   load_textures(wallpapers, files);
   load_buttons(buttons, files);
+  
   std::cout << "buttons: " << buttons.size() << std::endl;
   
   int index = 0;
