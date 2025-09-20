@@ -98,9 +98,23 @@ std::string get_config(){
   return path;
    
 }
+void change_wallpaper(std::vector<Button>buttons, std::string &current_texture, int index){
+        std::string unload = "hyprctl hyprpaper unload all";
+        std::string preload = "hyprctl hyprpaper preload " + buttons[index].path;
+        std::string wallpaper = "hyprctl hyprpaper wallpaper ," + buttons[index].path;
+        std::string command = unload;
+        system(command.c_str());
+        command = preload;
+        system(command.c_str());
+        command = wallpaper;
+        system(command.c_str());
+        current_texture = buttons[index].path;
+        save_wallpaper(buttons[index].path);
+}
 
 int main() {
-  int width = 5 * 96;
+  int rows = 5;
+  int width = rows * 96;
   int height = 800;
   std::string path = get_config();// "/home/blake/Pictures/wallpapers/";
   std::vector<std::string>files = get_files(path);
@@ -121,7 +135,7 @@ int main() {
   int index = 0;
   std::cout << "buttons loop" << std::endl;
       for (int i = 0; i < buttons.size(); i++){
-        for (int j = 0; j < 5; j++){
+        for (int j = 0; j < rows; j++){
           buttons[index].position.x = j * 96;
           buttons[index].position.y = i * 96;
           buttons[index].source = {buttons[index].position.x, buttons[index].position.y,
@@ -140,24 +154,25 @@ int main() {
     for (int i = 0; i < buttons.size(); i++){
       if (CheckCollisionPointRec(mouse, buttons[i].source)
             && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
-        std::string unload = "hyprctl hyprpaper unload all";
-        std::string preload = "hyprctl hyprpaper preload " + buttons[i].path;
-        std::string wallpaper = "hyprctl hyprpaper wallpaper ," + buttons[i].path;
-        std::string command = unload;
-        system(command.c_str());
-        command = preload;
-        system(command.c_str());
-        command = wallpaper;
-        system(command.c_str());
-        current_texture = buttons[i].path;
-        save_wallpaper(buttons[i].path);
+        // std::string unload = "hyprctl hyprpaper unload all";
+        // std::string preload = "hyprctl hyprpaper preload " + buttons[i].path;
+        // std::string wallpaper = "hyprctl hyprpaper wallpaper ," + buttons[i].path;
+        // std::string command = unload;
+        // system(command.c_str());
+        // command = preload;
+        // system(command.c_str());
+        // command = wallpaper;
+        // system(command.c_str());
+        // current_texture = buttons[i].path;
+        // save_wallpaper(buttons[i].path);
+        change_wallpaper(buttons, current_texture, i);
       }
     }
     // draw
     BeginDrawing();
     ClearBackground(BLACK);
       for (int i = 0; i < wallpapers.size(); i++){
-        for (int j = 0; j < 5; j++){
+        for (int j = 0; j < rows; j++){
           Rectangle source = {0,0,float(wallpapers[index].width),float(wallpapers[index].height)};
           buttons[index].destination = {float(j*96), float(i*96), 96, 96};
           DrawTexturePro(wallpapers[index], source, buttons[index].destination
