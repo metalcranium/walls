@@ -167,7 +167,8 @@ int main() {
 
   float camera_speed = 100;
   float scroll_speed = 4;
-
+// The texture that what is viewed in the camera will be rendered to
+// and the Recangle that that texture will be drawn to.
   RenderTexture viewport = LoadRenderTexture(width, height);
   Rectangle screen_rec = {0,0,float(viewport.texture.width),-float(viewport.texture.height)};
   
@@ -179,8 +180,11 @@ int main() {
   std::string current_texture;
   
   while (!WindowShouldClose()){
-    // update
+    // Update
     camera.target.y -= GetMouseWheelMove() * scroll_speed;
+// We have to calculate where the mouse is on the texture not where
+// it is on the screen for the buttons to work correctly with the scroll
+// otherwise the positions that are being clicked no will no be correct.    
     Vector2 mouse = GetScreenToWorld2D(GetMousePosition(), camera);
     for (int i = 0; i < buttons.size(); i++){
       if (CheckCollisionPointRec(mouse, buttons[i].destination)
@@ -194,17 +198,22 @@ int main() {
     else if (IsKeyDown(KEY_UP)){
       camera.target.y -= camera_speed * GetFrameTime();
     }
-
+// Connects the viewport, camera, and the texture so that they all
+// can be drawn to the screen. The actual drawing will be done below
+// after the BeginDrawing function.
     BeginTextureMode(viewport);
     ClearBackground(BLACK);
     BeginMode2D(camera);
 
       draw_wallpapers(wallpapers, buttons, rows);
+      
     EndMode2D();
     EndTextureMode();
-    // draw
+
+    // Draw
     BeginDrawing();
     ClearBackground(BLACK);
+
       DrawTextureRec(viewport.texture, screen_rec, {0,0}, WHITE);
 
     EndDrawing();
