@@ -138,7 +138,6 @@ void input(Camera2D &camera, float speed){
   else if (IsKeyDown(KEY_UP)){
     camera.target.y -= speed * GetFrameTime();
   }
-
 }
 
 int main() {
@@ -172,11 +171,9 @@ int main() {
   RenderTexture viewport = LoadRenderTexture(width, height);
   Rectangle screen_rec = {0,0,float(viewport.texture.width),-float(viewport.texture.height)};
   
-  int index = 0;
   std::cout << "buttons loop" << std::endl;
   set_paths_to_buttons(buttons, files);
 
-  index = 0;
   std::string current_texture;
   
   while (!WindowShouldClose()){
