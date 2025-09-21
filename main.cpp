@@ -179,6 +179,9 @@ int main() {
   while (!WindowShouldClose()){
     // Update
     camera.target.y -= GetMouseWheelMove() * scroll_speed;
+    if (camera.target.y < 0){
+      camera.target.y = 0;
+    }
 // We have to calculate where the mouse is on the texture not where
 // it is on the screen for the buttons to work correctly with the scroll
 // otherwise the positions that are being clicked no will no be correct.    
