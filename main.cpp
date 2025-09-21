@@ -115,6 +115,16 @@ void change_wallpaper(std::vector<Button>buttons, std::string &current_texture, 
 void draw_wallpapers(){
   
 }
+void input(Camera2D &camera, float speed){
+  // TODO: Add mouse scroll
+  if (IsKeyDown(KEY_DOWN)){
+    camera.target.y += speed * GetFrameTime();
+  }
+  else if (IsKeyDown(KEY_UP)){
+    camera.target.y -= speed * GetFrameTime();
+  }
+
+}
 
 int main() {
   int rows = 5;
@@ -132,6 +142,15 @@ int main() {
   load_textures(wallpapers, files);
   load_buttons(buttons, files);
   std::cout << "buttons: " << buttons.size() << std::endl;
+// Camera for being able to scroll if you have more wallpapers
+// than what can fit in the box.
+  Camera2D camera;
+  camera.offset = {float(width)/2, float(height)/2};
+  camera.target = {float(width)/2, float(height)/2};
+  camera.rotation = 0;
+  camera.zoom = 1;
+
+  float camera_speed = 100;
 
   RenderTexture viewport = LoadRenderTexture(width, height);
   Rectangle screen_rec = {0,0,float(viewport.texture.width),-float(viewport.texture.width)};
@@ -154,26 +173,51 @@ int main() {
   
   while (!WindowShouldClose()){
     // update
-    Vector2 mouse = GetMousePosition();
+    Vector2 mouse = GetScreenToWorld2D(GetMousePosition(), camera);
     for (int i = 0; i < buttons.size(); i++){
-      if (CheckCollisionPointRec(mouse, buttons[i].source)
+      if (CheckCollisionPointRec(mouse, buttons[i].destination)
             && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
         change_wallpaper(buttons, current_texture, i);
       }
     }
-    // draw
-    BeginDrawing();
+    if (IsKeyDown(KEY_DOWN)){
+      camera.target.y += camera_speed * GetFrameTime();
+    }
+    else if (IsKeyDown(KEY_UP)){
+      camera.target.y -= camera_speed * GetFrameTime();
+    }
+
+    BeginTextureMode(viewport);
     ClearBackground(BLACK);
+    BeginMode2D(camera);
+
       for (int i = 0; i < wallpapers.size(); i++){
         for (int j = 0; j < rows; j++){
           Rectangle source = {0,0,float(wallpapers[index].width),float(wallpapers[index].height)};
           buttons[index].destination = {float(j*96), float(i*96), 96, 96};
+
           DrawTexturePro(wallpapers[index], source, buttons[index].destination
                           ,{0,0}, 0.0, WHITE);
           index++;
         }
       }
       index = 0;
+    EndMode2D();
+    EndTextureMode();
+    // draw
+    BeginDrawing();
+    ClearBackground(BLACK);
+      // for (int i = 0; i < wallpapers.size(); i++){
+      //   for (int j = 0; j < rows; j++){
+      //     Rectangle source = {0,0,float(wallpapers[index].width),float(wallpapers[index].height)};
+      //     buttons[index].destination = {float(j*96), float(i*96), 96, 96};
+      //     DrawTexturePro(wallpapers[index], source, buttons[index].destination
+      //                     ,{0,0}, 0.0, WHITE);
+      //     index++;
+      //   }
+      // }
+      // index = 0;
+      DrawTextureRec(viewport.texture, screen_rec, {0,0}, WHITE);
 
     EndDrawing();
   }
