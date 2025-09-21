@@ -199,17 +199,6 @@ int main() {
     ClearBackground(BLACK);
     BeginMode2D(camera);
 
-      // for (int i = 0; i < wallpapers.size(); i++){
-      //   for (int j = 0; j < rows; j++){
-      //     Rectangle source = {0,0,float(wallpapers[index].width),float(wallpapers[index].height)};
-      //     buttons[index].destination = {float(j*96), float(i*96), 96, 96};
-
-      //     DrawTexturePro(wallpapers[index], source, buttons[index].destination
-      //                     ,{0,0}, 0.0, WHITE);
-      //     index++;
-      //   }
-      // }
-      // index = 0;
       draw_wallpapers(wallpapers, buttons, rows);
     EndMode2D();
     EndTextureMode();
