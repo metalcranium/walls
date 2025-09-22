@@ -118,7 +118,7 @@ void change_wallpaper(std::vector<Button>buttons, std::string &current_texture, 
 
 void draw_wallpapers(std::vector<Texture>wallpapers, std::vector<Button>&buttons, int rows){
   int index = 0;
-  for (int i = 0; i < wallpapers.size(); i++){
+  for (int i = 0; i < wallpapers.size()/rows; i++){
     for (int j = 0; j < rows; j++){
       Rectangle source = {0,0,float(wallpapers[index].width),float(wallpapers[index].height)};
       buttons[index].destination = {float(j*96), float(i*96), 96, 96};
@@ -142,8 +142,9 @@ void input(Camera2D &camera, float speed){
 
 int main() {
   int rows = 5;
+  int columns = 3;
   int width = rows * 96;
-  int height = 800;
+  int height = columns * 96;
   std::string path = get_config();// "/home/blake/Pictures/wallpapers/";
   std::vector<std::string>files = get_files(path);
   std::vector<Button>buttons;
@@ -165,7 +166,7 @@ int main() {
   camera.zoom = 1;
 
   float camera_speed = 100;
-  float scroll_speed = 4;
+  float scroll_speed = 20;
 // The texture that what is viewed in the camera will be rendered to
 // and the Recangle that that texture will be drawn to.
   RenderTexture viewport = LoadRenderTexture(width, height);
@@ -179,8 +180,12 @@ int main() {
   while (!WindowShouldClose()){
     // Update
     camera.target.y -= GetMouseWheelMove() * scroll_speed;
+    float columns_size = float(wallpapers.size())/rows * 96;
     if (camera.target.y < 0){
       camera.target.y = 0;
+    }
+    else if (camera.target.y + columns_size > columns_size - columns){
+      camera.target.y -= columns ;
     }
 // We have to calculate where the mouse is on the texture not where
 // it is on the screen for the buttons to work correctly with the scroll
