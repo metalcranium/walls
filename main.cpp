@@ -144,7 +144,7 @@ int main() {
   int rows = 5;
   int columns = 3;
   int width = rows * 96;
-  int height = columns * 96;
+  int height = 800;//columns * 96;
   std::string path = get_config();// "/home/blake/Pictures/wallpapers/";
   std::vector<std::string>files = get_files(path);
   std::vector<Button>buttons;
@@ -184,8 +184,8 @@ int main() {
     if (camera.target.y < 0){
       camera.target.y = 0;
     }
-    else if (camera.target.y + columns_size > columns_size - columns){
-      camera.target.y -= columns ;
+    else if (camera.target.y + columns_size > columns_size){
+      camera.target.y -=  columns_size;
     }
 // We have to calculate where the mouse is on the texture not where
 // it is on the screen for the buttons to work correctly with the scroll
