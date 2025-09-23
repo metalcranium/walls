@@ -130,14 +130,16 @@ void draw_wallpapers(std::vector<Texture>wallpapers, std::vector<Button>&buttons
   }
   index = 0;
 }
-void input(Camera2D &camera, float speed){
+void input(Camera2D &camera, float camera_speed, float scroll_speed, Vector2 mouse){
   // TODO: Add mouse scroll
+  camera.target.y -= GetMouseWheelMove() * scroll_speed;
   if (IsKeyDown(KEY_DOWN)){
-    camera.target.y += speed * GetFrameTime();
+    camera.target.y += camera_speed * GetFrameTime();
   }
   else if (IsKeyDown(KEY_UP)){
-    camera.target.y -= speed * GetFrameTime();
+    camera.target.y -= camera_speed * GetFrameTime();
   }
+
 }
 
 int main() {
@@ -179,30 +181,32 @@ int main() {
   
   while (!WindowShouldClose()){
     // Update
-    camera.target.y -= GetMouseWheelMove() * scroll_speed;
+
+    Vector2 mouse = GetScreenToWorld2D(GetMousePosition(), camera);
+    // camera.target.y -= GetMouseWheelMove() * scroll_speed;
+    input(camera, camera_speed, scroll_speed, mouse);
     float columns_size = float(wallpapers.size())/rows * 96;
     if (camera.target.y < 0){
       camera.target.y = 0;
     }
-    else if (camera.target.y + columns_size > columns_size){
-      camera.target.y -=  columns_size;
+    else if (camera.target.y > columns_size - (8*96)){
+      camera.target.y =  columns_size - (8*96);
     }
 // We have to calculate where the mouse is on the texture not where
 // it is on the screen for the buttons to work correctly with the scroll
 // otherwise the positions that are being clicked no will no be correct.    
-    Vector2 mouse = GetScreenToWorld2D(GetMousePosition(), camera);
     for (int i = 0; i < buttons.size(); i++){
       if (CheckCollisionPointRec(mouse, buttons[i].destination)
             && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
         change_wallpaper(buttons, current_texture, i);
       }
     }
-    if (IsKeyDown(KEY_DOWN)){
-      camera.target.y += camera_speed * GetFrameTime();
-    }
-    else if (IsKeyDown(KEY_UP)){
-      camera.target.y -= camera_speed * GetFrameTime();
-    }
+    // if (IsKeyDown(KEY_DOWN)){
+    //   camera.target.y += camera_speed * GetFrameTime();
+    // }
+    // else if (IsKeyDown(KEY_UP)){
+    //   camera.target.y -= camera_speed * GetFrameTime();
+    // }
 // Connects the viewport, camera, and the texture so that they all
 // can be drawn to the screen. The actual drawing will be done below
 // after the BeginDrawing function.
