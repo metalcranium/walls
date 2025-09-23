@@ -1,7 +1,7 @@
 #include <filesystem>
 #include <iostream>
 #include <fstream>
-#include <pthread.h>
+#include <thread>
 #include <vector>
 #include "raylib.h"
 
@@ -49,7 +49,7 @@ void print_files(std::vector<T> files){
     std::cout << i << std::endl;
   }
 }
-
+// TODO: figure out how to load the textures with multithreading.
 void load_textures(std::vector<Texture>&wallpapers,std::vector<std::string>files){
   int count = 0;
   for (auto i : files){
@@ -229,4 +229,6 @@ int main() {
   }
   unload_textures(wallpapers);
   CloseWindow();
+  std::thread t;
+  std::cout << "threads: " << t.hardware_concurrency() << std::endl;
 }
