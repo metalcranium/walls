@@ -57,6 +57,12 @@ void load_textures(std::vector<Texture>&wallpapers,std::vector<std::string>files
     wallpapers.push_back(texture);
     count++;
     std::cout << count << " images loaded." << std::endl;
+    BeginDrawing();
+    ClearBackground(BLACK);
+    DrawText("Loading", 200,400,50,{128,128,128,255});
+    DrawText("Wallpapers...", 200,425,50,{128,128,128,255});
+
+    EndDrawing();
   }
 }
 
@@ -141,6 +147,22 @@ void input(Camera2D &camera, float camera_speed, float scroll_speed, Vector2 mou
   }
 
 }
+void loading_screen(std::vector<Texture>&wallpapers, std::vector<std::string>files){
+  while(!WindowShouldClose()){
+    if (wallpapers.size() >= files.size()){
+      break;
+    }
+    load_textures(wallpapers, files);
+    // BeginDrawing();
+
+    // ClearBackground(BLACK);
+    // DrawText("Loading", 200, 400, 50, {128,128,128,255});
+    // DrawText("Wallpapers...", 200, 420, 50, {128,128,128,255});
+    // EndDrawing();
+    // WindowShouldClose();
+  }
+ 
+}
 
 int main() {
   int rows = 5;
@@ -154,9 +176,12 @@ int main() {
  
   print_files(files);
 
-  InitWindow(width,height,"Walls");
 
-  load_textures(wallpapers, files);
+  InitWindow(width,height,"Walls");
+  SetTargetFPS(60);
+
+  // load_textures(wallpapers, files);
+  loading_screen(wallpapers, files);
   load_buttons(buttons, files);
   std::cout << "buttons: " << buttons.size() << std::endl;
 // Camera for being able to scroll if you have more wallpapers
@@ -167,7 +192,7 @@ int main() {
   camera.rotation = 0;
   camera.zoom = 1;
 
-  float camera_speed = 100;
+  float camera_speed = 300;
   float scroll_speed = 20;
 // The texture that what is viewed in the camera will be rendered to
 // and the Recangle that that texture will be drawn to.
@@ -201,12 +226,12 @@ int main() {
         change_wallpaper(buttons, current_texture, i);
       }
     }
-    // if (IsKeyDown(KEY_DOWN)){
-    //   camera.target.y += camera_speed * GetFrameTime();
-    // }
-    // else if (IsKeyDown(KEY_UP)){
-    //   camera.target.y -= camera_speed * GetFrameTime();
-    // }
+    if (IsKeyDown(KEY_DOWN)){
+      camera.target.y += camera_speed * GetFrameTime();
+    }
+    else if (IsKeyDown(KEY_UP)){
+      camera.target.y -= camera_speed * GetFrameTime();
+    }
 // Connects the viewport, camera, and the texture so that they all
 // can be drawn to the screen. The actual drawing will be done below
 // after the BeginDrawing function.
