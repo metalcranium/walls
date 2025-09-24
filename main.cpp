@@ -58,13 +58,12 @@ void load_textures(std::vector<Texture>&wallpapers,std::vector<std::string>files
     wallpapers.push_back(texture);
     count++;
     std::cout << count << " images loaded." << std::endl;
-    // BeginDrawing();
-    // ClearBackground(BLACK);
-    // DrawText("Loading", 200,400,50,{128,128,128,255});
-    // DrawText("Wallpapers...", 200,425,50,{128,128,128,255});
+    BeginDrawing();
+    ClearBackground(BLACK);
+    DrawText("Loading", 100,300,50,{128,128,128,255});
+    DrawText("Wallpapers...", 100,375,50,{128,128,128,255});
 
-    // EndDrawing();
-    loading_screen(wallpapers,files);
+    EndDrawing();
   }
 }
 
@@ -150,19 +149,12 @@ void input(Camera2D &camera, float camera_speed, float scroll_speed, Vector2 mou
 
 }
 void loading_screen(std::vector<Texture>&wallpapers, std::vector<std::string>files){
-  // while(!WindowShouldClose()){
-    // if (wallpapers.size() >= files.size()){
-    //   break;
-    // }
-    // load_textures(wallpapers, files);
-    BeginDrawing();
-
-    ClearBackground(BLACK);
-    DrawText("Loading", 200, 400, 50, {128,128,128,255});
-    DrawText("Wallpapers...", 200, 420, 50, {128,128,128,255});
-    EndDrawing();
-    // WindowShouldClose();
-  // }
+  while(!WindowShouldClose()){
+    if (wallpapers.size() >= files.size()){
+      break;
+    }
+    load_textures(wallpapers, files);
+  }
  
 }
 
