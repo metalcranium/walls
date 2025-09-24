@@ -50,6 +50,7 @@ void print_files(std::vector<T> files){
   }
 }
 // TODO: figure out how to load the textures with multithreading.
+void loading_screen(std::vector<Texture>&wallpapers, std::vector<std::string>files);
 void load_textures(std::vector<Texture>&wallpapers,std::vector<std::string>files){
   int count = 0;
   for (auto i : files){
@@ -57,12 +58,13 @@ void load_textures(std::vector<Texture>&wallpapers,std::vector<std::string>files
     wallpapers.push_back(texture);
     count++;
     std::cout << count << " images loaded." << std::endl;
-    BeginDrawing();
-    ClearBackground(BLACK);
-    DrawText("Loading", 200,400,50,{128,128,128,255});
-    DrawText("Wallpapers...", 200,425,50,{128,128,128,255});
+    // BeginDrawing();
+    // ClearBackground(BLACK);
+    // DrawText("Loading", 200,400,50,{128,128,128,255});
+    // DrawText("Wallpapers...", 200,425,50,{128,128,128,255});
 
-    EndDrawing();
+    // EndDrawing();
+    loading_screen(wallpapers,files);
   }
 }
 
@@ -148,19 +150,19 @@ void input(Camera2D &camera, float camera_speed, float scroll_speed, Vector2 mou
 
 }
 void loading_screen(std::vector<Texture>&wallpapers, std::vector<std::string>files){
-  while(!WindowShouldClose()){
-    if (wallpapers.size() >= files.size()){
-      break;
-    }
-    load_textures(wallpapers, files);
-    // BeginDrawing();
+  // while(!WindowShouldClose()){
+    // if (wallpapers.size() >= files.size()){
+    //   break;
+    // }
+    // load_textures(wallpapers, files);
+    BeginDrawing();
 
-    // ClearBackground(BLACK);
-    // DrawText("Loading", 200, 400, 50, {128,128,128,255});
-    // DrawText("Wallpapers...", 200, 420, 50, {128,128,128,255});
-    // EndDrawing();
+    ClearBackground(BLACK);
+    DrawText("Loading", 200, 400, 50, {128,128,128,255});
+    DrawText("Wallpapers...", 200, 420, 50, {128,128,128,255});
+    EndDrawing();
     // WindowShouldClose();
-  }
+  // }
  
 }
 
