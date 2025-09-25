@@ -3,6 +3,7 @@
 #include <fstream>
 #include <thread>
 #include <vector>
+#include <memory>
 #include "raylib.h"
 
 class Button {
@@ -50,7 +51,7 @@ void print_files(std::vector<T> files){
   }
 }
 // TODO: figure out how to load the textures with multithreading.
-void loading_screen(std::vector<Texture>&wallpapers, std::vector<std::string>files);
+void loading_screen(std::vector<std::shared_ptr<Texture>>&wallpapers, std::vector<std::string>files);
 void load_textures(std::vector<std::shared_ptr<Texture>>&wallpapers,std::vector<std::string>files){
   int count = 0;
   for (auto i : files){
@@ -250,6 +251,4 @@ int main() {
   }
   unload_textures(wallpapers);
   CloseWindow();
-  std::thread t;
-  std::cout << "threads: " << t.hardware_concurrency() << std::endl;
 }
