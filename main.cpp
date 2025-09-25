@@ -175,7 +175,7 @@ int main() {
 
 
   InitWindow(width,height,"Walls");
-  SetTargetFPS(60);
+  // SetTargetFPS(60);
 
   // load_textures(wallpapers, files);
   loading_screen(wallpapers, files);
