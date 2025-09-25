@@ -51,10 +51,12 @@ void print_files(std::vector<T> files){
 }
 // TODO: figure out how to load the textures with multithreading.
 void loading_screen(std::vector<Texture>&wallpapers, std::vector<std::string>files);
-void load_textures(std::vector<Texture>&wallpapers,std::vector<std::string>files){
+void load_textures(std::vector<std::shared_ptr<Texture>>&wallpapers,std::vector<std::string>files){
   int count = 0;
   for (auto i : files){
-    Texture texture = LoadTexture(i.c_str());
+    // Texture texture = LoadTexture(i.c_str());
+    std::shared_ptr<Texture>texture = std::make_shared<Texture>();
+    *texture = LoadTexture(i.c_str());
     wallpapers.push_back(texture);
     count++;
     std::cout << count << " images loaded." << std::endl;
@@ -67,25 +69,25 @@ void load_textures(std::vector<Texture>&wallpapers,std::vector<std::string>files
   }
 }
 
-void load_buttons(std::vector<Button>&buttons,std::vector<std::string>files){
+void load_buttons(std::vector<std::shared_ptr<Button>>&buttons,std::vector<std::string>files){
   int count = 0;
   for (auto i : files){
-    Button button;
+    std::shared_ptr<Button>button = std::make_shared<Button>();
     buttons.push_back(button);
     count++;
     std::cout << count << " buttons loaded." << std::endl;
   }
 }
 
-void set_paths_to_buttons(std::vector<Button>&buttons,std::vector<std::string>files){
+void set_paths_to_buttons(std::vector<std::shared_ptr<Button>>&buttons,std::vector<std::string>files){
   for (int i = 0; i < buttons.size(); i++){
-    buttons[i].set_path(files[i]);
+    buttons[i]->set_path(files[i]);
   }
 }
 
-void unload_textures(std::vector<Texture> pictures){
+void unload_textures(std::vector<std::shared_ptr<Texture>> pictures){
   for (auto i : pictures){
-    UnloadTexture(i);
+    UnloadTexture(*i);
   }
 }
 
@@ -109,28 +111,28 @@ std::string get_config(){
   return path;
    
 }
-void change_wallpaper(std::vector<Button>buttons, std::string &current_texture, int index){
+void change_wallpaper(std::vector<std::shared_ptr<Button>>buttons, std::string &current_texture, int index){
         std::string unload = "hyprctl hyprpaper unload all";
-        std::string preload = "hyprctl hyprpaper preload " + buttons[index].path;
-        std::string wallpaper = "hyprctl hyprpaper wallpaper ," + buttons[index].path;
+        std::string preload = "hyprctl hyprpaper preload " + buttons[index]->path;
+        std::string wallpaper = "hyprctl hyprpaper wallpaper ," + buttons[index]->path;
         std::string command = unload;
         system(command.c_str());
         command = preload;
         system(command.c_str());
         command = wallpaper;
         system(command.c_str());
-        current_texture = buttons[index].path;
-        save_wallpaper(buttons[index].path);
+        current_texture = buttons[index]->path;
+        save_wallpaper(buttons[index]->path);
 }
 
-void draw_wallpapers(std::vector<Texture>wallpapers, std::vector<Button>&buttons, int rows){
+void draw_wallpapers(std::vector<std::shared_ptr<Texture>>wallpapers, std::vector<std::shared_ptr<Button>>&buttons, int rows){
   int index = 0;
   for (int i = 0; i < wallpapers.size()/rows; i++){
     for (int j = 0; j < rows; j++){
-      Rectangle source = {0,0,float(wallpapers[index].width),float(wallpapers[index].height)};
-      buttons[index].destination = {float(j*96), float(i*96), 96, 96};
+      Rectangle source = {0,0,float(wallpapers[index]->width),float(wallpapers[index]->height)};
+      buttons[index]->destination = {float(j*96), float(i*96), 96, 96};
 
-      DrawTexturePro(wallpapers[index], source, buttons[index].destination
+      DrawTexturePro(*wallpapers[index], source, buttons[index]->destination
                       ,{0,0}, 0.0, WHITE);
       index++;
     }
@@ -148,7 +150,7 @@ void input(Camera2D &camera, float camera_speed, float scroll_speed, Vector2 mou
   }
 
 }
-void loading_screen(std::vector<Texture>&wallpapers, std::vector<std::string>files){
+void loading_screen(std::vector<std::shared_ptr<Texture>>&wallpapers, std::vector<std::string>files){
   while(!WindowShouldClose()){
     if (wallpapers.size() >= files.size()){
       break;
@@ -165,8 +167,8 @@ int main() {
   int height = 800;//columns * 96;
   std::string path = get_config();// "/home/blake/Pictures/wallpapers/";
   std::vector<std::string>files = get_files(path);
-  std::vector<Button>buttons;
-  std::vector<Texture>wallpapers;
+  std::vector<std::shared_ptr<Button>>buttons;
+  std::vector<std::shared_ptr<Texture>>wallpapers;
  
   print_files(files);
 
@@ -215,7 +217,7 @@ int main() {
 // it is on the screen for the buttons to work correctly with the scroll
 // otherwise the positions that are being clicked no will no be correct.    
     for (int i = 0; i < buttons.size(); i++){
-      if (CheckCollisionPointRec(mouse, buttons[i].destination)
+      if (CheckCollisionPointRec(mouse, buttons[i]->destination)
             && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
         change_wallpaper(buttons, current_texture, i);
       }
