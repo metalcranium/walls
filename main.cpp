@@ -6,8 +6,13 @@
 #include <memory>
 #include "raylib.h"
 
-class Button {
-  public:
+struct Timer{
+  int frame;
+  int sec;
+  int min;
+  int hr;
+};
+struct Button {
     float width;
     float height;
     std::string path;
@@ -167,6 +172,7 @@ int main() {
   int columns = 3;
   int width = rows * 96;
   int height = 800;//columns * 96;
+  int fps = 60;
   std::string path = get_config();// "/home/blake/Pictures/wallpapers/";
   std::vector<std::string>files = get_files(path);
   std::vector<std::shared_ptr<Button>>buttons;
@@ -176,7 +182,7 @@ int main() {
 
 
   InitWindow(width,height,"Walls");
-  // SetTargetFPS(60);
+  SetTargetFPS(fps);
 
   load_textures(wallpapers, files);
   // loading_screen(wallpapers, files);
@@ -201,9 +207,30 @@ int main() {
   set_paths_to_buttons(buttons, files);
 
   std::string current_texture;
+
+  Timer timer;
+  timer.sec = 0;
+  timer.min = 0;
+  timer.hr = 0;
+  
   
   while (!WindowShouldClose()){
     // Update
+
+    timer.frame++;
+    if (timer.frame >= fps){
+      timer.frame = 0;
+      timer.sec++;
+      if (timer.sec >= 60){
+        timer.sec = 0;
+        timer.min++;
+        if (timer.min >= 60){
+          timer.min = 0;
+          timer.hr++;
+        }
+      }
+    }
+    std::cout << timer.hr << ":" << timer.min << ":" << timer.sec << std::endl;
 
     Vector2 mouse = GetScreenToWorld2D(GetMousePosition(), camera);
     // camera.target.y -= GetMouseWheelMove() * scroll_speed;
