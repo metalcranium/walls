@@ -173,6 +173,7 @@ int main() {
   int width = rows * 96;
   int height = 800;//columns * 96;
   int fps = 60;
+  int interval = 5;
   std::string path = get_config();// "/home/blake/Pictures/wallpapers/";
   std::vector<std::string>files = get_files(path);
   std::vector<std::shared_ptr<Button>>buttons;
@@ -212,11 +213,20 @@ int main() {
   timer.sec = 0;
   timer.min = 0;
   timer.hr = 0;
-  
+
+  int index = 0;
   
   while (!WindowShouldClose()){
     // Update
 
+    if (timer.min >= interval){
+      timer.min = 0;
+      change_wallpaper(buttons, current_texture, index);
+      index++;
+      if (index > buttons.size()){
+        index = 0;
+      }
+    }
     timer.frame++;
     if (timer.frame >= fps){
       timer.frame = 0;
