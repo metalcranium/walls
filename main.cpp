@@ -80,6 +80,7 @@ void load_buttons(std::vector<std::shared_ptr<Button>>&buttons,std::vector<std::
   for (auto i : files){
     std::shared_ptr<Button>button = std::make_shared<Button>();
     buttons.emplace_back(button);
+    
     count++;
     std::cout << count << " buttons loaded." << std::endl;
   }
@@ -91,11 +92,11 @@ void set_paths_to_buttons(std::vector<std::shared_ptr<Button>>&buttons,std::vect
   }
 }
 
-void unload_textures(std::vector<std::shared_ptr<Texture>> pictures){
-  for (auto i : pictures){
-    UnloadTexture(*i);
-  }
-}
+// void unload_textures(std::vector<std::shared_ptr<Texture>> pictures){
+//   for (auto i : pictures){
+//     UnloadTexture(*i);
+//   }
+// }
 
 void save_wallpaper(std::string path){
   std::ofstream file;
@@ -287,6 +288,6 @@ int main() {
 
     EndDrawing();
   }
-  unload_textures(wallpapers);
+  // unload_textures(wallpapers);
   CloseWindow();
 }
